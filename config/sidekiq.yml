@@ -1,0 +1,27 @@
+:concurrency: 5
+
+:redis:
+  url: <%= ENV.fetch('SIDEKIQ_REDIS_URL', 'redis://redis:6379/1') %>
+
+:queues:
+  - default
+  - high_priority
+  - low_priority
+  - mailers
+
+:scheduler:
+  cron:
+    # Example periodic job
+    # daily_cleanup:
+    #   every: '0 2 * * *'
+    #   queue: low_priority
+
+:max_retries: 5
+
+:dead_timeout: 86400  # 1 day
+
+:lifecycle:
+  startup:
+    - "puts 'Sidekiq starting up...'"
+  shutdown:
+    - "puts 'Sidekiq shutting down...'"
