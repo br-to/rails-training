@@ -15,27 +15,21 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   def create
-    @article = Article.new(article_params)
+    @article = Article.create!(article_params)
 
-    if @article.save
-      render json: @article, status: :created, location: @article
-    else
-      render json: @article.errors, status: :unprocessable_entity
-    end
+    render json: @article, status: :created, location: @article
   end
 
   # PATCH/PUT /articles/:id
   def update
-    if @article.update(article_params)
+    if @article.update!(article_params)
       render json: @article
-    else
-      render json: @article.errors, status: :unprocessable_entity
     end
   end
 
   # DELETE /articles/:id
   def destroy
-    @article.destroy
+    @article.destroy!
     head :no_content
   end
 
