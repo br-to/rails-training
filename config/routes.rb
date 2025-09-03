@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   # Custom health check endpoint
   get "health" => "health#index"
 
+  resources :articles, except: [:new, :edit] do
+    resources :comments, only: [:create, :update, :destroy]
+  end
+
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
