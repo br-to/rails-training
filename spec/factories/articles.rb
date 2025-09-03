@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :article do
-    title { "MyString" }
-    body { "MyText" }
+    sequence(:title) { |n| "Article #{n}" }
+    body { "Sample body text" }
     published { false }
-    published_at { "2025-09-02 15:51:18" }
+    published_at { nil }
   end
 end
