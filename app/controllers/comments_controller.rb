@@ -11,8 +11,6 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /articles/:article_id/comments/:id
   def update
-    @comment = @article.comments.find(params[:id])
-
     if @comment.update!(comment_params)
       render json: @comment
     end
@@ -20,7 +18,6 @@ class CommentsController < ApplicationController
 
   # DELETE /articles/:article_id/comments/:id
   def destroy
-    @comment = @article.comments.find(params[:id])
     @comment.destroy!
     head :no_content
   end
