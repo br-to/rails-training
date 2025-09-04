@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_02_162054) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_04_134634) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_02_162054) do
     t.datetime "published_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "comments_count", default: 0, null: false
+    t.index ["published", "published_at"], name: "index_articles_on_published_and_published_at"
     t.index ["title"], name: "index_articles_on_title", unique: true
   end
 
