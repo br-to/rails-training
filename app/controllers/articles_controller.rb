@@ -3,9 +3,9 @@ class ArticlesController < ApplicationController
 
   # GET /articles
   def index
-    @articles = Article.visible
+    articles = Article.visible.select(:id, :title, :published, :published_at, :comments_count, :created_at, :updated_at).order(published_at: :desc, id: :desc)
 
-    render json: @articles
+    render json: articles
   end
 
   # GET /articles/:id
