@@ -2,7 +2,8 @@ FROM ruby:3.2.9-bookworm
 
 # Install dependencies
 RUN apt-get update -qq && apt-get install -y \
-    postgresql-client \
+    default-mysql-client \
+    default-libmysqlclient-dev \
     nodejs \
     yarn \
     vim \

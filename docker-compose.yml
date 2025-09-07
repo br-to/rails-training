@@ -7,7 +7,6 @@ services:
       - .:/app
       - bundle_cache:/usr/local/bundle
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/rails_training_development
       - REDIS_URL=redis://redis:6379/0
       - RAILS_MASTER_KEY_FILE=/app/config/master.key
     depends_on:
@@ -17,15 +16,16 @@ services:
     tty: true
 
   db:
-    image: postgres:15
+    image: mysql:8.4
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: rails_training_development
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: rails_training_development
+      MYSQL_USER: rails
+      MYSQL_PASSWORD: railspassword
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mysql_data:/var/lib/mysql
     ports:
-      - "5432:5432"
+      - "3306:3306"
 
   redis:
     image: redis:7-alpine
@@ -35,6 +35,6 @@ services:
       - redis_data:/data
 
 volumes:
-  postgres_data:
+  mysql_data:
   redis_data:
   bundle_cache:
