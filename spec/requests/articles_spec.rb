@@ -3,10 +3,10 @@ require 'rails_helper'
 RSpec.describe 'Articles API', type: :request do
   describe 'GET /articles' do
     it '公開条件を満たす記事のみを返す' do
-      visible1 = FactoryBot.create(:article, published: true, published_at: nil)
-      visible2 = FactoryBot.create(:article, published: true, published_at: 1.day.ago)
-      _hidden1 = FactoryBot.create(:article, published: false)
-      _hidden2 = FactoryBot.create(:article, published: true, published_at: 1.day.from_now)
+      visible1 = Article.create!(title: 'V1', body: 'b', published: true, published_at: nil)
+      visible2 = Article.create!(title: 'V2', body: 'b', published: true, published_at: 1.day.ago)
+      _hidden1 = Article.create!(title: 'H1', body: 'b', published: false)
+      _hidden2 = Article.create!(title: 'H2', body: 'b', published: true, published_at: 1.day.from_now)
 
       get '/articles'
 
@@ -19,7 +19,7 @@ RSpec.describe 'Articles API', type: :request do
 
   describe 'GET /articles/:id' do
     it '記事詳細を返す' do
-      article = FactoryBot.create(:article, published: true)
+      article = Article.create!(title: 'A1', body: 'b', published: true)
 
       get "/articles/#{article.id}"
 
@@ -77,7 +77,7 @@ RSpec.describe 'Articles API', type: :request do
 
   describe 'PATCH /articles/:id' do
     it '記事を更新して200を返す' do
-      article = FactoryBot.create(:article, published: false)
+      article = Article.create!(title: 'to-update', body: 'b', published: false)
       params = { article: { published: true } }
 
       patch "/articles/#{article.id}", params: params
@@ -90,7 +90,7 @@ RSpec.describe 'Articles API', type: :request do
 
   describe 'DELETE /articles/:id' do
     it '記事を削除して204を返す' do
-      article = FactoryBot.create(:article)
+      article = Article.create!(title: 'to-delete', body: 'b')
 
       delete "/articles/#{article.id}"
 
