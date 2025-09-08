@@ -4,11 +4,11 @@ class UsersController < ApplicationController
 
   def me
     render json: {
-      message: "hello, authenticated user!",
-      # TODO: 仮の情報を返す
+      message: "ログインしました",
       user_info: {
-        id: 1,
-        name: "API User"
+        id: current_user.id,
+        name: current_user.name,
+        email: current_user.email
       }
     }
   end
