@@ -16,9 +16,8 @@ module Authenticatable
   end
 
   def extract_token
-    # Bearer Token または X-API-Key
-    request.headers['Authorization']&.gsub(/^Bearer /, '') ||
-    request.headers['X-API-Key']
+    # Bearer Token
+    request.headers['Authorization']&.gsub(/^Bearer /, '')
   end
 
   def check_permission!(required_role = :user)

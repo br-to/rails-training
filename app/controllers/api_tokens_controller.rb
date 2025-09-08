@@ -3,9 +3,6 @@ class ApiTokensController < ApplicationController
   before_action :authenticate_request!, except: [:create]
 
   def create
-    # トークン発行（認証済みユーザー向け）
-    check_permission!(:user)
-
     user = User.find_by(email: params[:user_email])
       return render json: { error: 'User not found' }, status: :not_found unless user
 
