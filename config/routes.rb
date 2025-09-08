@@ -15,6 +15,7 @@ Rails.application.routes.draw do
     resources :comments, only: [:create, :update, :destroy]
   end
 
+  resources :api_tokens, only: [:create, :destroy]
 
   # Defines the root path route ("/")
   # root "posts#index"

@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe 'Comments API', type: :request do
   describe 'POST /articles/:article_id/comments' do
     it 'コメントを作成して201を返す' do

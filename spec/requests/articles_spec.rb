@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe 'Articles API', type: :request do
   describe 'GET /articles' do
     it '公開条件を満たす記事のみを返す' do
@@ -69,6 +67,7 @@ RSpec.describe 'Articles API', type: :request do
 
     it 'パラメータルートが無ければ400を返す' do
       post '/articles', params: {}
+
       expect(response).to have_http_status(:bad_request)
       json = JSON.parse(response.body)
       expect(json.dig('error', 'code')).to eq('bad_request')

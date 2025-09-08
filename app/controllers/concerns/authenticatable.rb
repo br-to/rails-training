@@ -6,23 +6,18 @@ module Authenticatable
   def authenticate_request!
     # トークン取得 → 検証 → ユーザー設定
     token = extract_token
-    if valid_token?(token)
-      # 一旦Userモデルは使用せず。認証成功として進む
-      @current_user = { id: 1, name: "API User" } # 固定値
+    api_token = ApiToken.find_by_token(token) if token
+    if api_token && api_token.active?
+      @current_user = api_token.user
+      api_token.touch(:last_used_at)
     else
       unauthorized!
     end
   end
 
   def extract_token
-    # Bearer Token または X-API-Key
-    request.headers['Authorization']&.gsub(/^Bearer /, '') ||
-    request.headers['X-API-Key']
-  end
-
-  def valid_token?(token)
-    # トークン検証ロジック
-    token == 'your_secret_api_key_here' || token == 'admin_secret_key'
+    # Bearer Token
+    request.headers['Authorization']&.gsub(/^Bearer /, '')
   end
 
   def check_permission!(required_role = :user)
@@ -32,14 +27,9 @@ module Authenticatable
     end
   end
 
+  # シンプルにする（今回の要件では管理者権限は非スコープ）
   def current_user_has_role?(role)
-    token = extract_token
-    case role
-    when :admin
-      token == 'admin_secret_key'
-    else
-      true # 通常ユーザー権限
-    end
+    true  # 認証済みユーザーは全て同じ権限
   end
 
   def current_user

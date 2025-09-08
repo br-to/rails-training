@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe Comment, type: :model do
   describe '関連' do
     it 'article に必ず属する（必須）' do
