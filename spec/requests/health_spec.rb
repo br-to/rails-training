@@ -1,5 +1,3 @@
-require 'rails_helper'
-
 RSpec.describe 'Health Check', type: :request do
   describe 'GET /health' do
     it 'returns a successful response' do
