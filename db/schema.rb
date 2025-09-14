@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_07_163756) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_14_160059) do
+  create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "balance", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_accounts_on_user_id", unique: true
+    t.check_constraint "`balance` >= 0", name: "balance_non_negative"
+  end
+
   create_table "api_tokens", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "token_digest"
@@ -51,6 +60,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_07_163756) do
     t.index ["name"], name: "index_users_on_name"
   end
 
+  add_foreign_key "accounts", "users"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "comments", "articles"
 end
