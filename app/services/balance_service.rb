@@ -8,8 +8,14 @@ class BalanceService
       account = Account.lock.find(account_id)
       account.balance += amount
       account.save!
-      account  # ← これを追加して戻り値を統一
+
+      Rails.logger.info("event=balance_update account_id=#{account_id} delta=+#{amount} result=ok reason=deposit")
+      account
     end
+  rescue => e
+    # エラーログ
+    Rails.logger.info("event=balance_update account_id=#{account_id} delta=+#{amount} result=error reason=#{e.class.name}")
+    raise
   end
 
   # 出金
@@ -24,10 +30,16 @@ class BalanceService
 
       account.balance -= amount
       account.save!
+
+      Rails.logger.info("event=balance_update account_id=#{account_id} delta=-#{amount} result=ok reason=withdraw")
       account
     end
   rescue InsufficientFundsError => e
     Rails.logger.info("event=balance_update account_id=#{account_id} delta=-#{amount} result=error reason=insufficient_funds")
-    raise # 再発生させてコントローラーで422を返す
+    raise
+  rescue => e
+    # システムエラーログ
+    Rails.logger.info("event=balance_update account_id=#{account_id} delta=-#{amount} result=error reason=#{e.class.name}")
+    raise
   end
 end
