@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_09_14_160059) do
+ActiveRecord::Schema[7.2].define(version: 2025_09_15_140312) do
   create_table "accounts", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "balance", default: 0, null: false
@@ -51,6 +51,18 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_160059) do
     t.index ["article_id"], name: "index_comments_on_article_id"
   end
 
+  create_table "transfers", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "from_account_id", null: false
+    t.bigint "to_account_id", null: false
+    t.integer "amount", null: false
+    t.string "idempotency_key", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from_account_id"], name: "fk_rails_3b260aee3c"
+    t.index ["idempotency_key"], name: "index_transfers_on_idempotency_key", unique: true
+    t.index ["to_account_id"], name: "fk_rails_0ed16a9709"
+  end
+
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "email", null: false
     t.string "name", null: false
@@ -63,4 +75,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_09_14_160059) do
   add_foreign_key "accounts", "users"
   add_foreign_key "api_tokens", "users"
   add_foreign_key "comments", "articles"
+  add_foreign_key "transfers", "accounts", column: "from_account_id"
+  add_foreign_key "transfers", "accounts", column: "to_account_id"
 end
