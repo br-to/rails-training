@@ -17,6 +17,13 @@ Rails.application.routes.draw do
 
   resources :api_tokens, only: [:create, :destroy]
 
+  resources :accounts, only: [] do
+    member do
+      post :deposit    # POST /accounts/:id/deposit
+      post :withdraw   # POST /accounts/:id/withdraw
+    end
+  end
+
   # Defines the root path route ("/")
   # root "posts#index"
 end
