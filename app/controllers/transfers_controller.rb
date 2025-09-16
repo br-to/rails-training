@@ -13,23 +13,28 @@ class TransfersController < ApplicationController
         render json: { transfer: transfer, message: "Transfer completed" }
       else
         # 新規作成 → 送金処理実行
+        from_account_id = params[:from_account_id].to_i
+        to_account_id = params[:to_account_id].to_i
+        amount = params[:amount].to_i
+
         transfer = Transfer.create!(
           idempotency_key: idempotency_key,
-          from_account_id: params[:from_account_id],
-          to_account_id: params[:to_account_id],
-          amount: params[:amount]
+          from_account_id: from_account_id,
+          to_account_id: to_account_id,
+          amount: amount
         )
 
         # 残高更新処理
-        BalanceService.transfer(params[:from_account_id], params[:to_account_id], params[:amount])
+        BalanceService.transfer(from_account_id, to_account_id, amount)
         render json: { transfer: transfer, message: "Transfer completed" }
       end
     end
-    rescue ActiveRecord::RecordInvalid => e
-      render_unprocessable(e)
-    rescue => e
-      render_internal_error(e)
-    end
+  rescue ActiveRecord::RecordInvalid => e
+    render_unprocessable(e)
+  rescue BalanceService::InsufficientFundsError => e
+    render_unprocessable(e)
+  rescue => e
+    render_internal_error(e)
   end
 
   private
