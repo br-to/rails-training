@@ -25,4 +25,9 @@ Rails.application.routes.draw do
   end
 
   resources :transfers, only: [:create]  # POST /transfers
+
+  if Rails.env.development?
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq'
+  end
 end
