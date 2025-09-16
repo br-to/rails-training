@@ -1,5 +1,6 @@
 RSpec.describe BalanceService, type: :service do
-  let(:account) { Account.create!(balance: 1000) }
+  let(:user) { User.create!(name: "Test User", email: "test@example.com") }
+  let(:account) { Account.create!(user: user, balance: 1000) }
 
   describe ".deposit" do
     it "deposits amount correctly under concurrency" do
