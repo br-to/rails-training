@@ -8,6 +8,7 @@ Rails 7 API モードアプリケーション（Docker + PostgreSQL + Redis構�
 - **Rails**: 7.2.2 (API モード)
 - **Database**: PostgreSQL 15
 - **Cache**: Redis 7
+- **Background Jobs**: Sidekiq 7.0
 - **Testing**: RSpec
 - **Container**: Docker & Docker Compose
 
@@ -35,7 +36,17 @@ docker-compose up -d
 docker-compose up
 ```
 
-### 3. 動作確認
+### 3. Sidekiqワーカーを起動（非同期ジョブ処理用）
+
+```bash
+# 別ターミナルでSidekiqワーカーを起動
+docker-compose exec web bundle exec sidekiq
+
+# またはバックグラウンドで起動
+docker-compose exec -d web bundle exec sidekiq
+```
+
+### 4. 動作確認
 
 アプリケーションが正常に起動したら、以下のエンドポイントでヘルスチェックできます：
 
@@ -47,7 +58,20 @@ curl http://localhost:3000/up
 curl http://localhost:3000/health
 ```
 
-### 4. 停止
+#### Sidekiq Web UI（開発環境のみ）
+
+```bash
+# ブラウザで以下にアクセス
+http://localhost:3000/sidekiq
+```
+
+Sidekiq Web UIでは以下の情報を確認できます：
+- キューの状況（Enqueued, Processing, Failed）
+- ジョブの実行履歴
+- リトライ中のジョブ
+- 失敗したジョブ
+
+### 5. 停止
 
 ```bash
 docker-compose down
@@ -66,6 +90,10 @@ docker-compose exec web rspec
 
 # マイグレーション
 docker-compose exec web rails db:migrate
+
+# Sidekiqを使ったバックグラウンドジョブのテスト
+docker-compose exec web rails console
+# => MyJob.perform_later("掃除")
 ```
 
 ### 新しいgemを追加
@@ -104,6 +132,13 @@ docker-compose exec web rails db:migrate
 - **web**: Rails APIサーバー (ポート3000)
 - **db**: PostgreSQL データベース (ポート5432)
 - **redis**: Redis キャッシュサーバー (ポート6379)
+
+### Sidekiq設定
+
+- **キュー**: `default`
+- **リトライ**: 最大5回（自動）
+- **Redis URL**: `redis://redis:6379/1`
+- **Web UI**: http://localhost:3000/sidekiq （開発環境のみ）
 
 ### ディレクトリ構造
 
