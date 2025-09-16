@@ -15,6 +15,9 @@ gem 'puma', '~> 6.0'
 # Use Redis adapter to run Action Cable in production and for caching
 gem 'redis', '~> 4.0'
 
+# Background job processing with Sidekiq
+gem 'sidekiq'
+
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.7'
 
