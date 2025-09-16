@@ -34,6 +34,19 @@ services:
     volumes:
       - redis_data:/data
 
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    volumes:
+      - .:/app
+      - bundle_cache:/usr/local/bundle
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - RAILS_MASTER_KEY_FILE=/app/config/master.key
+    depends_on:
+      - db
+      - redis
+
 volumes:
   mysql_data:
   redis_data:
