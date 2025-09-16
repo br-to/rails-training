@@ -8,6 +8,7 @@ services:
       - bundle_cache:/usr/local/bundle
     environment:
       - REDIS_URL=redis://redis:6379/0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/1
       - RAILS_MASTER_KEY_FILE=/app/config/master.key
     depends_on:
       - db
@@ -42,6 +43,7 @@ services:
       - bundle_cache:/usr/local/bundle
     environment:
       - REDIS_URL=redis://redis:6379/0
+      - SIDEKIQ_REDIS_URL=redis://redis:6379/1
       - RAILS_MASTER_KEY_FILE=/app/config/master.key
     depends_on:
       - db
