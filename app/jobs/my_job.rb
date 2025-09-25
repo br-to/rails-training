@@ -48,7 +48,8 @@ class MyJob < ApplicationJob
       job_id: job_id,
       error: e.class.name,
       error_message: e.message,
-      permanent: true)
+      permanent: true
+    )
     raise # Deadキューに送るため
   end
 
