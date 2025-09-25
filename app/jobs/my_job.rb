@@ -51,12 +51,10 @@ class MyJob < ApplicationJob
   def create_log_record(job_id, action_type)
     title = "Job Execution Log - #{job_id} - #{action_type}"
 
-    Article.find_or_create_by!(title: title) do |article|
+    Article.find_or_create_by(title: title) do |article|
       article.body = "This is a log entry for job #{job_id} with action #{action_type}."
       article.published = false
     end
-  rescue ActiveRecord::RecordNotUnique
-    Rails.logger.info("Log record for job #{job_id} already exists, skipping creation.")
   end
 
   # 外部API呼び出しをシミュレート
