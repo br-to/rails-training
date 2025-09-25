@@ -13,18 +13,18 @@ RSpec.describe MyJob, type: :job do
     end
 
     context "一時的なエラー発生時" do
-      it "ジョブがリトライされること" do
+      it "TemporaryExternalErrorが発生すること" do
         expect {
           described_class.perform_now('temporary_failure')
-        }.to raise_error(TemporaryExternalError)
+        }.to raise_error(TemporaryExternalError, "API timeout")
       end
     end
 
     context "永続的なエラー発生時" do
-      it "ジョブが失敗すること" do
+      it "PermanentExternalErrorが発生すること" do
         expect {
           described_class.perform_now('permanent_failure')
-        }.to raise_error(PermanentExternalError)
+        }.to raise_error(PermanentExternalError, "Invalid request")
       end
     end
 

@@ -1,21 +1,12 @@
 class MyJob < ApplicationJob
   queue_as :default
 
-  # リトライ設定 5回まで
-  sidekiq_options retry: 5
-
-  # リトライ間隔のカスタマイズ
-  sidekiq_retry_in do |count, exception|
-    case exception
-    when PermanentExternalError
-      :kill # リトライしないで即座にDeadキューへ移動
-    else
-      15 * (count + 1) # 15秒、30秒、45秒、60秒、75秒
-    end
-  end
+  # ActiveJob のリトライ設定（テスト環境以外）
+  retry_on TemporaryExternalError, wait: 5.seconds, attempts: 5 unless Rails.env.test?
+  discard_on PermanentExternalError unless Rails.env.test?
 
   def perform(action_type = "success")
-    retry_count = sidekiq_options_hash["retry_count"] || 0
+    retry_count = executions - 1  # ActiveJob の executions メソッド
     start_time = Time.current
     job_id = self.job_id  # ActiveJob の job_id メソッド
 
