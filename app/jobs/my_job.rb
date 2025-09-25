@@ -42,7 +42,13 @@ class MyJob < ApplicationJob
     )
     raise # Sidekiqが自動でリトライする
   rescue PermanentExternalError => e
-    Rails.logger.error("Permanent error occurred: #{e.message}. Job will not be retried.")
+    Rails.logger.error(
+      event: "job_error",
+      job: self.class.name,
+      job_id: job_id,
+      error: e.class.name,
+      error_message: e.message,
+      permanent: true)
     raise # Deadキューに送るため
   end
 
